@@ -3,146 +3,109 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>علويتي 🤍</title>
+<title>علويتي 👑</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Marhey:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Cairo',sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Marhey',sans-serif;}
 
 body{
-height:100vh;
+min-height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-background:linear-gradient(135deg,#141e30,#243b55);
-overflow:hidden;
+background:radial-gradient(circle at top,#1b1b3a,#0f0c29);
 color:white;
+padding:20px;
+overflow:hidden;
 }
 
-/* خلفية ناعمة متحركة */
-body::before{
-content:"";
-position:absolute;
-width:200%;
-height:200%;
-background:radial-gradient(circle,rgba(255,255,255,0.05) 1px,transparent 1px);
-background-size:40px 40px;
-animation:moveBg 30s linear infinite;
-}
-
-@keyframes moveBg{
-from{transform:translateY(0);}
-to{transform:translateY(-500px);}
-}
-
+/* بطاقة ملكية */
 .card{
-position:relative;
-width:90%;
-max-width:700px;
-padding:50px;
-border-radius:30px;
-background:rgba(255,255,255,0.07);
-backdrop-filter:blur(25px);
-box-shadow:0 30px 90px rgba(0,0,0,0.7);
+width:100%;
+max-width:420px;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(30px);
+border-radius:35px;
+padding:45px 25px;
 text-align:center;
-animation:fadeUp 1.5s ease;
-}
-
-@keyframes fadeUp{
-from{opacity:0; transform:translateY(50px);}
-to{opacity:1; transform:translateY(0);}
+box-shadow:0 30px 90px rgba(0,0,0,0.8);
+position:relative;
 }
 
 h1{
-font-size:34px;
+font-size:30px;
 margin-bottom:15px;
-background:linear-gradient(45deg,#ffd700,#ffb347);
--webkit-background-clip:text;
-color:transparent;
+color:gold;
+text-shadow:0 0 25px gold;
 }
 
 p{
-font-size:20px;
-margin-bottom:35px;
-line-height:1.8;
+font-size:18px;
+line-height:2;
+margin-bottom:30px;
 }
 
-/* الأزرار */
+/* أزرار فخمة */
 .buttons{
-display:flex;
-justify-content:center;
-gap:25px;
 position:relative;
+height:120px;
 }
 
 button{
-padding:15px 45px;
-font-size:18px;
+position:absolute;
+padding:14px 35px;
+font-size:17px;
 border:none;
 border-radius:60px;
+font-weight:600;
 cursor:pointer;
-transition:0.4s;
-font-weight:700;
+transition:0.3s;
 }
 
+/* زر نعم */
 .yes{
-background:linear-gradient(45deg,#00c853,#64dd17);
-color:white;
-box-shadow:0 10px 40px rgba(0,200,83,0.5);
+left:50%;
+transform:translateX(-50%);
+bottom:0;
+background:linear-gradient(45deg,#d4af37,#ffd700);
+color:#000;
+box-shadow:0 10px 30px rgba(255,215,0,0.6);
 }
 
 .yes:hover{
-transform:scale(1.15);
-box-shadow:0 0 30px #00ff88;
+box-shadow:0 0 40px gold;
 }
 
+/* زر لا */
 .no{
-background:linear-gradient(45deg,#c62828,#ff1744);
+background:linear-gradient(45deg,#8b0000,#c62828);
 color:white;
-position:absolute;
+top:0;
+left:50%;
+transform:translateX(-50%);
 }
 
-.success{
-margin-top:30px;
-font-size:22px;
-color:#ffd700;
-display:none;
-}
-
-/* قلوب */
-.heart{
+/* شاشة انتقال */
+.overlay{
 position:fixed;
+inset:0;
+background:black;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+color:gold;
 font-size:22px;
-color:#ff4d6d;
-animation:floatUp 4s linear forwards;
-}
-@keyframes floatUp{
-0%{opacity:1; transform:translateY(0);}
-100%{opacity:0; transform:translateY(-300px);}
+opacity:0;
+pointer-events:none;
+transition:1s;
 }
 
-/* زر المفاجأة */
-.surpriseBtn{
-margin-top:20px;
-padding:15px 45px;
-font-size:18px;
-border:none;
-border-radius:60px;
-background:linear-gradient(45deg,#ffd700,#ff9f43);
-cursor:pointer;
-font-weight:700;
-transition:0.4s;
-}
-
-.surpriseBtn:hover{
-transform:scale(1.1);
-box-shadow:0 0 30px gold;
+.overlay.active{
+opacity:1;
+pointer-events:all;
 }
 </style>
 </head>
@@ -150,70 +113,53 @@ box-shadow:0 0 30px gold;
 <body>
 
 <div class="card" id="card">
-<h1>إلى علويتي 🤍✨</h1>
+<h1>علويتي 👑🤍</h1>
+
 <p>
 علويتي…<br>
-أريد أسألك سؤال من قلبي،<br>
-مو سؤال عابر… سؤال يحدد مستقبلي كله.<br><br>
-ترضين تكونين سعادتي، وعمري، وأجمل شي صار بحياتي؟
+تره إنتِ مو بس حب،<br>
+إنتِ حياة كاملة أريد أعيشها يمّج.<br><br>
+ترضين تبقين إلي، وابقى إلج طول العمر؟
 </p>
 
 <div class="buttons">
-<button class="yes" id="yesBtn">إي والله أريد 🤍</button>
-<button class="no" id="noBtn">لا مستحيل 😅</button>
+<button class="no" id="noBtn">لا</button>
+<button class="yes" id="yesBtn">إي أريد 👑</button>
 </div>
 
-<div class="success" id="successText">
-كنت أعرف إنو قلب علويتي أكبر من كلمة لا 🤍✨<br>
-وما يخيب ظني أبد 💛<br><br>
-<button class="surpriseBtn" onclick="openVideo()">
-شوفي المفاجأة 🎬
-</button>
 </div>
 
+<div class="overlay" id="overlay">
+وبهالمناسبة حبيت أهديلج هذا البارت... 🎬👑
 </div>
 
 <script>
 const noBtn=document.getElementById("noBtn");
 const yesBtn=document.getElementById("yesBtn");
 const card=document.getElementById("card");
-const success=document.getElementById("successText");
+const overlay=document.getElementById("overlay");
 
-// زر لا يهرب
-noBtn.addEventListener("mouseover",move);
-noBtn.addEventListener("touchstart",e=>{e.preventDefault();move();},{passive:false});
+/* زر لا يهرب فعلياً */
+noBtn.addEventListener("touchstart",moveNo,{passive:false});
+noBtn.addEventListener("mouseover",moveNo);
 
-function move(){
+function moveNo(e){
+if(e) e.preventDefault();
 const rect=card.getBoundingClientRect();
-noBtn.style.left=Math.random()*(rect.width-160)+"px";
-noBtn.style.top=Math.random()*(rect.height-100)+"px";
+const x=Math.random()*(rect.width-120);
+const y=Math.random()*(rect.height-80);
+noBtn.style.left=x+"px";
+noBtn.style.top=y+"px";
 }
 
-// عند الضغط على نعم
+/* عند الضغط على نعم */
 yesBtn.addEventListener("click",()=>{
-success.style.display="block";
-yesBtn.disabled=true;
-noBtn.style.display="none";
-createHearts();
+overlay.classList.add("active");
+
+setTimeout(()=>{
+window.location.href="https://youtube.com/shorts/ashrS47hv4c";
+},2500);
 });
-
-// قلوب
-function createHearts(){
-for(let i=0;i<30;i++){
-let h=document.createElement("div");
-h.className="heart";
-h.innerHTML="❤";
-h.style.left=Math.random()*100+"vw";
-h.style.bottom="0";
-document.body.appendChild(h);
-setTimeout(()=>h.remove(),4000);
-}
-}
-
-// فتح الفيديو بدون embed حتى ما يصير خطأ
-function openVideo(){
-window.open("https://youtube.com/shorts/Afyad4sFmxM","_blank");
-}
 </script>
 
 </body>
