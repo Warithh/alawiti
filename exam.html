@@ -1,563 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الامتحان الوطني - اللغة العربية | المهندس وارث العوادي</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap');
-        :root{--primary:#1a5276;--primary-light:#2980b9;--accent:#e74c3c;--success:#27ae60;--warning:#f39c12;--bg:#f0f3f7;--card:#fff;--text:#2c3e50;--text-light:#7f8c8d;--border:#dce1e8;--gold:#f1c40f}
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.8}
-        .header{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);color:#fff;padding:30px 20px;text-align:center;position:relative;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.15)}
-        .header::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(255,255,255,.05) 0%,transparent 70%);animation:pulse 4s ease-in-out infinite}
-        @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-        .header h1{font-size:2.2em;font-weight:800;margin-bottom:8px;position:relative}
-        .header p{font-size:1.1em;opacity:.9;position:relative}
-        .header .badge{display:inline-block;background:rgba(255,255,255,.2);padding:5px 20px;border-radius:20px;margin-top:12px;font-size:.95em;position:relative}
-        .container{max-width:850px;margin:0 auto;padding:25px 20px}
-        .model-selection{text-align:center;padding:40px 0}
-        .model-selection h2{font-size:1.8em;color:var(--primary);margin-bottom:10px}
-        .model-selection>p{color:var(--text-light);margin-bottom:30px;font-size:1.05em}
-        .model-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:20px}
-        .model-card{background:var(--card);border-radius:20px;padding:35px 20px;box-shadow:0 4px 20px rgba(0,0,0,.08);cursor:pointer;transition:all .3s ease;border:3px solid transparent;position:relative;overflow:hidden}
-        .model-card::after{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,var(--primary),var(--primary-light));border-radius:0 0 10px 10px;opacity:0;transition:opacity .3s}
-        .model-card:hover{transform:translateY(-8px);box-shadow:0 8px 30px rgba(0,0,0,.15);border-color:var(--primary-light)}
-        .model-card:hover::after{opacity:1}
-        .model-icon{font-size:3em;margin-bottom:15px}
-        .model-number{font-size:1.4em;font-weight:800;color:var(--primary);margin-bottom:8px}
-        .model-info{color:var(--text-light);font-size:1em}
-        .model-topics{font-size:.85em;color:var(--text-light);margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
-        .progress-container{background:var(--card);border-radius:16px;padding:20px 25px;margin-bottom:25px;box-shadow:0 2px 15px rgba(0,0,0,.06);position:sticky;top:0;z-index:100}
-        .progress-info{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-weight:500}
-        .progress-bar-bg{background:var(--border);border-radius:10px;height:10px;overflow:hidden}
-        .progress-bar-fill{background:linear-gradient(90deg,var(--primary),var(--primary-light));height:100%;border-radius:10px;transition:width .5s ease;width:0%}
-        .timer-display{font-size:1.4em;font-weight:700;color:var(--primary)}
-        .question-card{background:var(--card);border-radius:16px;padding:30px;margin-bottom:20px;box-shadow:0 2px 15px rgba(0,0,0,.06);border-right:5px solid var(--primary);transition:all .3s ease;animation:slideIn .4s ease}
-        @keyframes slideIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-        .question-card:hover{box-shadow:0 4px 25px rgba(0,0,0,.1)}
-        .question-number{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:50%;font-weight:700;font-size:1em;margin-left:12px;flex-shrink:0}
-        .question-header{display:flex;align-items:flex-start;margin-bottom:20px}
-        .question-text{font-size:1.15em;font-weight:600;line-height:2;color:var(--text);padding-top:6px}
-        .options-list{list-style:none;display:flex;flex-direction:column;gap:10px}
-        .option-item{position:relative}
-        .option-input{position:absolute;opacity:0;width:0;height:0}
-        .option-label{display:flex;align-items:center;padding:14px 20px;background:#f8f9fb;border:2px solid var(--border);border-radius:12px;cursor:pointer;transition:all .3s ease;font-size:1.05em;gap:12px}
-        .option-label:hover{border-color:var(--primary-light);background:#eef3f8;transform:translateX(-3px)}
-        .option-input:checked+.option-label{border-color:var(--primary);background:linear-gradient(135deg,#eef3f8,#dbe6f0);font-weight:600}
-        .option-letter{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:#fff;border:2px solid var(--border);font-weight:700;font-size:.9em;color:var(--primary);flex-shrink:0;transition:all .3s ease}
-        .option-input:checked+.option-label .option-letter{background:var(--primary);color:#fff;border-color:var(--primary)}
-        .option-label.correct{border-color:var(--success)!important;background:#e8f8ef!important}
-        .option-label.correct .option-letter{background:var(--success)!important;color:#fff!important;border-color:var(--success)!important}
-        .option-label.wrong{border-color:var(--accent)!important;background:#fde8e8!important}
-        .option-label.wrong .option-letter{background:var(--accent)!important;color:#fff!important;border-color:var(--accent)!important}
-        .explanation-box{margin-top:15px;padding:15px 20px;background:#fff8e1;border-radius:10px;border-right:4px solid var(--warning);font-size:.95em;display:none;animation:fadeIn .3s ease}
-        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-        .explanation-box .exp-title{font-weight:700;color:var(--warning);margin-bottom:5px}
-        .btn-container{display:flex;justify-content:center;gap:15px;margin:30px 0;flex-wrap:wrap}
-        .btn{padding:14px 40px;border:none;border-radius:12px;font-family:'Tajawal',sans-serif;font-size:1.1em;font-weight:700;cursor:pointer;transition:all .3s ease;display:inline-flex;align-items:center;gap:8px}
-        .btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;box-shadow:0 4px 15px rgba(26,82,118,.3)}
-        .btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(26,82,118,.4)}
-        .btn-secondary{background:#fff;color:var(--primary);border:2px solid var(--primary)}
-        .btn-secondary:hover{background:var(--primary);color:#fff}
-        .btn-danger{background:linear-gradient(135deg,var(--accent),#c0392b);color:#fff;box-shadow:0 4px 15px rgba(231,76,60,.3)}
-        .btn-danger:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(231,76,60,.4)}
-        .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
-        .btn-finish{background:linear-gradient(135deg,var(--accent),#c0392b);color:#fff;box-shadow:0 4px 15px rgba(231,76,60,.3);padding:12px 30px;border:none;border-radius:12px;font-family:'Tajawal',sans-serif;font-size:1.05em;font-weight:700;cursor:pointer;transition:all .3s ease;display:inline-flex;align-items:center;gap:8px;margin-top:15px}
-        .btn-finish:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(231,76,60,.4)}
-        .finish-bar{background:var(--card);border-radius:16px;padding:15px;text-align:center;margin-top:20px;box-shadow:0 2px 15px rgba(0,0,0,.06)}
-        .results-container{display:none;animation:slideIn .5s ease}
-        .score-card{background:var(--card);border-radius:20px;padding:40px;text-align:center;box-shadow:0 4px 25px rgba(0,0,0,.1);margin-bottom:30px}
-        .score-circle{width:180px;height:180px;border-radius:50%;margin:0 auto 25px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
-        .score-circle::before{content:'';position:absolute;inset:0;border-radius:50%;border:8px solid var(--border)}
-        .score-circle.excellent{background:linear-gradient(135deg,#27ae60,#2ecc71)}
-        .score-circle.good{background:linear-gradient(135deg,#2980b9,#3498db)}
-        .score-circle.average{background:linear-gradient(135deg,#f39c12,#f1c40f)}
-        .score-circle.poor{background:linear-gradient(135deg,#e74c3c,#c0392b)}
-        .score-circle .score-number{font-size:3em;font-weight:900;color:#fff}
-        .score-circle .score-label{color:rgba(255,255,255,.9);font-size:1em;font-weight:500}
-        .score-message{font-size:1.4em;font-weight:700;margin-bottom:10px}
-        .score-details{display:flex;justify-content:center;gap:30px;margin-top:20px;flex-wrap:wrap}
-        .detail-item{text-align:center;padding:15px 25px;background:#f8f9fb;border-radius:12px;min-width:120px}
-        .detail-item .detail-num{font-size:1.8em;font-weight:800}
-        .detail-item .detail-label{font-size:.85em;color:var(--text-light)}
-        .detail-item.correct-detail .detail-num{color:var(--success)}
-        .detail-item.wrong-detail .detail-num{color:var(--accent)}
-        .detail-item.skip-detail .detail-num{color:var(--text-light)}
-        .errors-section{margin-top:30px}
-        .errors-title{font-size:1.5em;font-weight:700;margin-bottom:20px;padding-bottom:10px;border-bottom:3px solid var(--accent);color:var(--accent);display:flex;align-items:center;gap:10px}
-        .error-card{background:var(--card);border-radius:16px;padding:25px;margin-bottom:18px;border-right:5px solid var(--accent);box-shadow:0 2px 15px rgba(0,0,0,.06)}
-        .error-card .q-text{font-weight:700;font-size:1.1em;margin-bottom:12px;color:var(--text)}
-        .error-card .your-answer{padding:8px 15px;background:#fde8e8;border-radius:8px;margin-bottom:8px;color:var(--accent);font-weight:600}
-        .error-card .correct-answer{padding:8px 15px;background:#e8f8ef;border-radius:8px;margin-bottom:12px;color:var(--success);font-weight:600}
-        .error-card .why-box{padding:12px 15px;background:#fff8e1;border-radius:8px;border-right:3px solid var(--warning);font-size:.95em;line-height:1.9}
-        .start-screen{text-align:center;padding:40px 20px;display:none}
-        .start-screen .exam-icon{font-size:4em;margin-bottom:20px}
-        .start-screen h2{font-size:1.8em;margin-bottom:15px;color:var(--primary)}
-        .start-screen .info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin:30px 0;text-align:center}
-        .info-item{background:var(--card);padding:20px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
-        .info-item .info-icon{font-size:1.8em;margin-bottom:8px}
-        .info-item .info-value{font-size:1.5em;font-weight:800;color:var(--primary)}
-        .info-item .info-label{font-size:.9em;color:var(--text-light)}
-        .question-card.answered-correct{border-right-color:var(--success)}
-        .question-card.answered-wrong{border-right-color:var(--accent)}
-        .nav-dots{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:20px 0}
-        .nav-dot{width:30px;height:30px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.7em;font-weight:700;cursor:pointer;transition:all .3s ease;background:#fff}
-        .nav-dot.current{border-color:var(--primary);background:var(--primary);color:#fff}
-        .nav-dot.answered{border-color:var(--primary-light);background:#eef3f8;color:var(--primary)}
-        .footer{text-align:center;padding:20px;color:var(--text-light);font-size:.9em}
-        .back-btn{background:none;border:2px solid rgba(255,255,255,.4);color:#fff;padding:8px 20px;border-radius:10px;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:.9em;font-weight:600;transition:all .3s;position:absolute;top:20px;left:20px;z-index:10}
-        .back-btn:hover{background:rgba(255,255,255,.2);border-color:#fff}
-        .model-badge{display:inline-block;background:var(--primary);color:#fff;padding:3px 15px;border-radius:15px;font-size:.85em;font-weight:600;margin-bottom:10px}
-        @media(max-width:600px){.header h1{font-size:1.6em}.question-card{padding:20px}.score-card{padding:25px}.score-details{gap:10px}.model-grid{grid-template-columns:1fr}.back-btn{position:static;margin-bottom:10px}}
-    </style>
-</head>
-<body>
-<div class="header">
-    <h1>الامتحان الوطني - اللغة العربية</h1>
-    <p>أسئلة شاملة في النحو والصرف والأدب والبلاغة والإملاء</p>
-    <div class="badge">إعداد المهندس وارث العوادي</div>
-</div>
-<div class="container">
-    <div id="modelSelection" class="model-selection">
-        <h2>اختر نموذج الامتحان</h2>
-        <p>كل نموذج يحتوي على 60 سؤالاً متنوعاً - المدة 60 دقيقة</p>
-        <div class="model-grid">
-            <div class="model-card" onclick="selectModel(1)">
-                <div class="model-icon">📝</div>
-                <div class="model-number">النموذج الأول</div>
-                <div class="model-info">60 سؤال</div>
-                <div class="model-topics">نحو - صرف - أدب - بلاغة</div>
-            </div>
-            <div class="model-card" onclick="selectModel(2)">
-                <div class="model-icon">📋</div>
-                <div class="model-number">النموذج الثاني</div>
-                <div class="model-info">60 سؤال</div>
-                <div class="model-topics">نحو - صرف - أدب - إملاء</div>
-            </div>
-            <div class="model-card" onclick="selectModel(3)">
-                <div class="model-icon">📑</div>
-                <div class="model-number">النموذج الثالث</div>
-                <div class="model-info">60 سؤال</div>
-                <div class="model-topics">نحو - صرف - بلاغة - إملاء</div>
-            </div>
-        </div>
-    </div>
-    <div id="startScreen" class="start-screen">
-        <div class="exam-icon">📝</div>
-        <h2 id="modelTitle">مرحباً بك في الامتحان</h2>
-        <p>اختبر معلوماتك في اللغة العربية</p>
-        <div class="info-grid">
-            <div class="info-item"><div class="info-icon">📋</div><div class="info-value">60</div><div class="info-label">عدد الأسئلة</div></div>
-            <div class="info-item"><div class="info-icon">⏱️</div><div class="info-value">60 د</div><div class="info-label">المدة الزمنية</div></div>
-            <div class="info-item"><div class="info-icon">🎯</div><div class="info-value">50%</div><div class="info-label">درجة النجاح</div></div>
-        </div>
-        <div class="btn-container">
-            <button class="btn btn-primary" onclick="startExam()">ابدأ الامتحان</button>
-            <button class="btn btn-secondary" onclick="goBack()">رجوع</button>
-        </div>
-    </div>
-    <div id="examSection" style="display:none;">
-        <div class="progress-container">
-            <div class="progress-info">
-                <span id="progressText">السؤال 1 من 60</span>
-                <span class="timer-display" id="timerDisplay">60:00</span>
-            </div>
-            <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBar"></div></div>
-            <div class="nav-dots" id="navDots"></div>
-        </div>
-        <div id="questionsContainer"></div>
-        <div class="btn-container">
-            <button class="btn btn-secondary" id="prevBtn" onclick="navigateQuestion(-1)" disabled>السابق</button>
-            <button class="btn btn-primary" id="nextBtn" onclick="navigateQuestion(1)">التالي</button>
-        </div>
-        <div class="finish-bar">
-            <button class="btn-finish" onclick="submitExam()">إنهاء الامتحان وتسليم الإجابات</button>
-        </div>
-    </div>
-    <div id="resultsSection" class="results-container"></div>
-</div>
-<div class="footer">إعداد المهندس وارث العوادي | الامتحان الوطني - اللغة العربية</div>
-<script>
-const model1Questions = [
-{q:"أفاطمُ مهلاً، نوع المنادى:",options:["نكرة مقصودة","مفرد مُرخَّم","نكرة غير مقصودة"],correct:1,explanation:"المنادى هنا 'فاطم' وهو مرخم من 'فاطمة'، أي حُذف آخره للترخيم، فيكون منادى مفرد مُرخَّم."},
-{q:"المفعول به المثنى يُنصب ويُجر:",options:["بالألف والياء","بالواو والياء","بالياء فقط"],correct:2,explanation:"المثنى يُرفع بالألف، ويُنصب ويُجر بالياء فقط."},
-{q:"الشعر الذي يسبق الشعر الأموي:",options:["الإسلامي","الجاهلي","العباسي"],correct:0,explanation:"ترتيب العصور: الجاهلي ثم صدر الإسلام ثم الأموي ثم العباسي. فالشعر الإسلامي يسبق الأموي مباشرة."},
-{q:"يختصّ بأبنية الكلمة:",options:["علم النحو","علم الصرف","علم العروض"],correct:1,explanation:"علم الصرف يختص بدراسة أبنية الكلمات وأوزانها وتصريفاتها."},
-{q:"ليست أداة نصب:",options:["لن","لم","كي"],correct:1,explanation:"'لم' أداة جزم وليست أداة نصب. أما 'لن' و'كي' فهما أدوات نصب للفعل المضارع."},
-{q:"صاحب قصيدة البُردة:",options:["حسان بن ثابت","امرؤ القيس","كعب بن زهير"],correct:2,explanation:"قصيدة 'بانت سعاد' المعروفة بالبُردة كتبها كعب بن زهير في مدح النبي محمد صلى الله عليه وسلم."},
-{q:"إيّاك، نوع الضمير:",options:["منفصل","متصل","مستتر"],correct:0,explanation:"'إياك' ضمير منفصل في محل نصب، وهو من ضمائر النصب المنفصلة."},
-{q:"يختصّ بأحوال أواخر الكلمة:",options:["علم النحو","علم الصرف","علم البلاغة"],correct:0,explanation:"علم النحو يختص بدراسة أحوال أواخر الكلمات العربية من حيث الإعراب والبناء."},
-{q:"مريم تُمنع من الصرف لـ:",options:["للعلمية والتأنيث","التأنيث فقط","العلمية فقط"],correct:0,explanation:"'مريم' ممنوعة من الصرف لسببين: العلمية والتأنيث."},
-{q:"يجعلون أصابعهم في آذانهم حذرَ الموت، إعراب 'حذر':",options:["مفعول به","مفعول لأجله","مفعول مطلق"],correct:1,explanation:"'حذر' مفعول لأجله منصوب لأنه يبين سبب جعلهم أصابعهم في آذانهم."},
-{q:"اسم مفعول من الفعل 'هدى':",options:["مَهدِيّ","مُهتدي","مَهدوي"],correct:0,explanation:"اسم المفعول من الفعل الثلاثي 'هدى' يكون على وزن 'مفعول' = مَهدِيّ."},
-{q:"لولا حرف:",options:["امتناع لوجود","امتناع لامتناع"],correct:0,explanation:"'لولا' حرف شرط غير جازم يفيد امتناع الجواب لوجود الشرط."},
-{q:"أعطيتُكَ نقوداً، يُعرب الضمير الكاف:",options:["في محل رفع فاعل","في محل نصب مفعول به","ليس له محل من الإعراب"],correct:1,explanation:"الكاف في 'أعطيتك' ضمير متصل في محل نصب مفعول به أول."},
-{q:"همزة 'امرؤ':",options:["تعدية","قطع","وصل"],correct:2,explanation:"'امرؤ' من الأسماء العشرة التي همزتها همزة وصل."},
-{q:"مصدر 'أعزّ' على وزن إفعال:",options:["إيعاز","إعزاز","أعزاز"],correct:1,explanation:"الفعل 'أعزّ' على وزن 'أفعل'، ومصدره على وزن 'إفعال' = إعزاز."},
-{q:"يُبنى الفعل المضارع على السكون إذا اتصلت به:",options:["الواو","نون النسوة","نون التوكيد"],correct:1,explanation:"يُبنى الفعل المضارع على السكون إذا اتصلت به نون النسوة، مثل: يكتبْنَ."},
-{q:"يُبنى الفعل المضارع على الفتح إذا اتصل به:",options:["نون النسوة","نون التوكيد","الواو"],correct:1,explanation:"يُبنى الفعل المضارع على الفتح إذا اتصلت به نون التوكيد الثقيلة أو الخفيفة."},
-{q:"كتبتُ بالقلم، معنى الباء:",options:["الاستعانة","لبيان الجنس","الإلصاق"],correct:0,explanation:"الباء هنا للاستعانة، لأن القلم هو الأداة التي استُعين بها في الكتابة."},
-{q:"كتبتُ الدرسَ، المفعول به هو:",options:["التاء في كتبت","الدرسَ","لا يوجد"],correct:1,explanation:"'الدرسَ' هو المفعول به المنصوب. أما التاء فهي فاعل."},
-{q:"ثمّ حرف عطف يفيد:",options:["المشاركة","الترتيب مع التعقيب","الترتيب مع التراخي"],correct:2,explanation:"'ثمّ' حرف عطف يفيد الترتيب مع التراخي أي مهلة زمنية."},
-{q:"مضارع فعل 'رجا':",options:["يرجو","يرجا","يرجي"],correct:0,explanation:"'رجا' فعل ماضٍ ناقص واوي، فمضارعه 'يرجو'."},
-{q:"﴿ومن يُؤتَ الحكمةَ فقد أُوتيَ خيراً كثيراً﴾ الفعل المناسب:",options:["يؤتي","يُؤتَ","يُؤتى"],correct:1,explanation:"الفعل هنا مجزوم لأنه وقع فعل شرط بعد 'مَن' الشرطية، وعلامة جزمه حذف حرف العلة."},
-{q:"همزة مفتوحة وما قبلها ساكن:",options:["جُرأة","سَأَلَ","رأى"],correct:0,explanation:"في كلمة 'جُرأة' الهمزة مفتوحة وما قبلها ساكن، فتُكتب على الألف."},
-{q:"لا تدعُ مع الله إلهاً آخر، إعراب 'تدعُ':",options:["حذف حرف العلة","حذف النون","السكون"],correct:0,explanation:"'تدعُ' فعل مضارع مجزوم بـ'لا' الناهية، وعلامة جزمه حذف حرف العلة."},
-{q:"مفرد 'مُقاتِلين':",options:["مُقاتِل","قاتِل","يُقاتِل"],correct:0,explanation:"'مقاتلين' جمع مذكر سالم، ومفرده 'مُقاتِل' اسم فاعل من قاتَلَ."},
-{q:"تُعيِّرنا أنّا قليلٌ عديدُنا فقلتُ لها إنّ الكرامَ قليلُ، الغرض الشعري:",options:["هجاء أعدائه","افتخار بقومه","غزل"],correct:1,explanation:"الشاعر يفتخر بقومه رغم قلة عددهم، فيقول إن الكرام دائماً قليلون."},
-{q:"إلا الذين آمنوا وعملوا الصالحاتِ، علامة نصب 'الصالحات':",options:["الكسرة بدل الفتحة","الكسرة","الفتحة"],correct:0,explanation:"'الصالحات' جمع مؤنث سالم يُنصب بالكسرة بدل الفتحة."},
-{q:"شعرُها كالسنابل، معنى الكاف:",options:["استعارة","تشبيه","لبيان الجنس"],correct:1,explanation:"الكاف هنا أداة تشبيه، حيث شُبّه الشعر بالسنابل."},
-{q:"إذا دخل حرف جر على كلمة 'مدينتان' تصبح:",options:["مدينتان","مدينتَيْن","مُدُن"],correct:1,explanation:"'مدينتان' مثنى، وإذا دخل عليها حرف جر تُجر بالياء فتصبح 'مدينتَيْن'."},
-{q:"يا ........... السيرةِ يسرّنا لقاؤك:",options:["محموداً","محمودَ"],correct:1,explanation:"المنادى هنا مضاف، والمنادى المضاف يُنصب بالفتحة: 'يا محمودَ السيرةِ'."},
-{q:"الاسم الذي يقع عليه فعل الفاعل:",options:["مفعول به","مفعول لأجله","مفعول مطلق"],correct:0,explanation:"المفعول به هو الاسم الذي يقع عليه فعل الفاعل."},
-{q:"من حروف المد الواو الساكنة وما قبلها:",options:["مفتوح","ساكن","مضموم"],correct:2,explanation:"حرف المد الواو يكون ساكناً وما قبله مضموم، مثل: يقُول."},
-{q:"وزن 'يتوب':",options:["يَفُول","فُل","يَفْعُل"],correct:2,explanation:"'يتوب' على وزن 'يَفْعُل'."},
-{q:"فعل 'دعا' مجزوم بـ:",options:["سكون","حذف حرف العلة","كسرة"],correct:1,explanation:"'دعا' فعل معتل الآخر، وعند الجزم يُحذف حرف العلة."},
-{q:"الفعل الماضي لـ 'يجمع':",options:["جامع","مجموع","جَمَعَ"],correct:2,explanation:"'يجمع' فعل مضارع، وماضيه 'جَمَعَ'."},
-{q:"لا يمكن جمع 'غضبان' جمع مذكر سالم لأنها:",options:["صفة على وزن فَعلان مؤنثها فَعلانة","صفة على وزن فَعلان مؤنثها فَعلى","صفة على وزن فَعلان مؤنثها فَعلة"],correct:1,explanation:"'غضبان' مؤنثها 'غضبى' على وزن فَعلى، وهذا النوع لا يُجمع جمع مذكر سالم."},
-{q:"ما هو الذي كان أحد حروفه الأصلية حرف علة:",options:["المزيد","صحيح الآخر","الفعل المعتل","المنقوص"],correct:2,explanation:"الفعل المعتل هو الذي يحتوي على حرف علة في حروفه الأصلية."},
-{q:"أحرف الزيادة في كلمة 'استطال':",options:["الألف والتاء","الألف والسين والتاء","فقط السين"],correct:1,explanation:"'استطال' أصلها 'طال'، وأحرف الزيادة هي الألف والسين والتاء على وزن استفعل."},
-{q:"ما نوع الأسلوب في: ليت الشبابَ يعودُ يوماً:",options:["خبري","إنشاء طلبي","إنشائي غير طلبي","نداء"],correct:1,explanation:"الأسلوب إنشائي طلبي لأن 'ليت' تفيد التمني وهو من الأساليب الإنشائية الطلبية."},
-{q:"كلمة 'أفصح' في جملة 'كان المتحدث أفصحَ القوم' تعني:",options:["أبلغهم بياناً","أكثرهم صمتاً","أشدهم صراخاً","أسرعهم حديثاً"],correct:0,explanation:"'أفصح' اسم تفضيل من الفصاحة، ومعناه أبلغهم بياناً وأوضحهم كلاماً."},
-{q:"علامة إعراب جمع المذكر السالم في حالة الرفع:",options:["الألف","الواو","الضمة","الفتحة"],correct:1,explanation:"جمع المذكر السالم يُرفع بالواو، ويُنصب ويُجر بالياء."},
-{q:"إنّ العلمَ نورٌ، الكلمة التي يؤكد دخول 'إنّ' عليها:",options:["العلم","نور","إنّ","لا شيء"],correct:0,explanation:"'إنّ' تدخل على الجملة الاسمية وتنصب المبتدأ اسمها، فـ'العلمَ' هو اسم إنّ المنصوب."},
-{q:"أيّ الجمل التالية تحتوي على مفعول مطلق؟",options:["قرأتُ الكتابَ بسرعة","جلستُ في الردهة","ضحك الطفلُ ضحكاً عالياً","يكتب الطالبُ بالقلم"],correct:2,explanation:"'ضحكاً' مفعول مطلق لأنه مصدر من نفس فعل الجملة 'ضحك'."},
-{q:"الجملة 'ما أجملَ السماءَ!' هي:",options:["جملة خبرية","أسلوب نداء","أسلوب تعجب","أسلوب نهي"],correct:2,explanation:"الجملة على صيغة 'ما أفعلَ' وهي إحدى صيغتي التعجب القياسيتين."},
-{q:"علامة نصب جمع المؤنث السالم:",options:["الكسرة","الفتحة","السكون","الضمة"],correct:0,explanation:"جمع المؤنث السالم يُنصب بالكسرة نيابة عن الفتحة."},
-{q:"'الذي، التي، اللذان' تُسمى:",options:["أسماء إشارة","أدوات شرط","أسماء موصولة","ضمائر"],correct:2,explanation:"هذه أسماء موصولة تُستخدم لربط الجمل."},
-{q:"من هو أمير الشعراء؟",options:["أحمد شوقي","المتنبي","نزار قباني","إيليا أبو ماضي"],correct:0,explanation:"أحمد شوقي لُقّب بأمير الشعراء وهو من أعظم شعراء العصر الحديث."},
-{q:"أيّ من الشعراء يُعَدّ من شعراء العصر الجاهلي؟",options:["عنترة بن شداد","بشار بن بُرد","أحمد مطر","أبو تمام"],correct:0,explanation:"عنترة بن شداد شاعر جاهلي مشهور وصاحب إحدى المعلقات."},
-{q:"المدرسة الأدبية التي اهتمت بالذات والخيال:",options:["الكلاسيكية","الواقعية","الرومانسية","العباسية"],correct:2,explanation:"المدرسة الرومانسية اهتمت بالذات والخيال والعواطف والطبيعة."},
-{q:"القصة القصيرة تتسم بـ:",options:["الطول والتشعب","كثرة الشخصيات","التكثيف والوحدة","تعدد الأزمنة"],correct:2,explanation:"القصة القصيرة تتميز بالتكثيف والوحدة والإيجاز."},
-{q:"فعل 'انظر':",options:["مضارع","أمر","ماضٍ"],correct:1,explanation:"'انظر' فعل أمر مبني على السكون من الفعل 'نظر'."},
-{q:"أمر الفعل 'حوى':",options:["حَوِي","احوي","احوِ"],correct:2,explanation:"'حوى' فعل معتل الآخر، وأمره 'احوِ' بحذف حرف العلة."},
-{q:"وزن 'سامح':",options:["فاعَل","يَفعل","افعَل"],correct:0,explanation:"'سامح' على وزن 'فاعَل' وهو فعل مزيد بالألف."},
-{q:"مُلئت السنابلُ تنحني تواضعاً والفارغاتُ رؤوسُهنّ شوامخُ، يدل على:",options:["الحنطة","التواضع","الزراعة"],correct:1,explanation:"البيت يدل على فضيلة التواضع؛ فالسنابل الممتلئة تنحني بينما الفارغة مرتفعة."},
-{q:"وزن 'أجمل':",options:["يَفعل","أَفعَل","فَعَل"],correct:1,explanation:"'أجمل' على وزن 'أَفعَل'."},
-{q:"معنى 'ذهب ماء وجهه':",options:["قلة الحياء","قلة الجمال","قلة القبول"],correct:0,explanation:"'ذهب ماء وجهه' كناية عن قلة الحياء وفقدان الكرامة."},
-{q:"إذا درستَ ستنجح، نوع 'إذا':",options:["ناصبة","شرطية","زائدة"],correct:1,explanation:"'إذا' هنا ظرف لما يُستقبل من الزمان، أداة شرط غير جازمة."},
-{q:"الفعل الذي يُرفع بالنون ويُنصب ويُجزم بحذفها:",options:["الأفعال الخمسة","الأفعال المعتلة","الأفعال المتعدية"],correct:0,explanation:"الأفعال الخمسة تُرفع بثبوت النون، وتُنصب وتُجزم بحذف النون."},
-{q:"تلك مدرسةُ اللغة العربية، إعراب 'تلك':",options:["مبتدأ","خبر","ظرف"],correct:0,explanation:"'تلك' اسم إشارة مبني في محل رفع مبتدأ."},
-{q:"قرأتُ ......... جزءاً من القرآن الكريم:",options:["اثنتي عشرة","اثنتي عشر","اثني عشر"],correct:2,explanation:"'جزء' مذكر، والعدد المركب يوافق المعدود في التذكير: اثني عشر جزءاً."},
-];
-const model2Questions = [
-{q:"أيّهم صحّ:",options:["المسؤولية","المسئولية","المسؤوليّة"],correct:2,explanation:"الكتابة الصحيحة هي 'المسؤوليّة' بالهمزة على الواو."},
-{q:"فعل أجوف:",options:["وعد","فاز","قضى"],correct:1,explanation:"'فاز' فعل أجوف لأن وسطه حرف علة."},
-{q:"نجح كلا الطالبَيْن، علامة رفع 'كلا':",options:["الألف","الضمة","الفتحة"],correct:0,explanation:"'كلا' ملحقة بالمثنى وتُرفع بالألف لأنها مضافة إلى اسم ظاهر."},
-{q:"﴿قُتل الإنسانُ ما أكفرَه﴾ نوع 'ما':",options:["زائدة","نافية","حجازية","تعجبية"],correct:3,explanation:"'ما' هنا تعجبية على صيغة 'ما أفعله' أي ما أشدّ كفره."},
-{q:"﴿ما كان اللهُ ليعذبَهم﴾ نوع اللام:",options:["لام التعليل","لام الجحود","لام الأمر"],correct:1,explanation:"اللام هنا لام الجحود لأنها وقعت بعد 'كان' المنفية بـ'ما'."},
-{q:"المبني من الأسماء التالية:",options:["المدرسة","هؤلاء","كتابٌ","طالبٌ"],correct:1,explanation:"'هؤلاء' اسم إشارة مبني على الكسر، والأسماء المبنية تشمل الضمائر وأسماء الإشارة والموصولة."},
-{q:"'ظنّ' وأخواتها تنصب:",options:["مفعولاً واحداً","مفعولين أصلهما مبتدأ وخبر","ثلاثة مفاعيل"],correct:1,explanation:"'ظنّ' وأخواتها أفعال القلوب تدخل على المبتدأ والخبر فتنصبهما مفعولين."},
-{q:"الاسم المقصور ينتهي بـ:",options:["ياء لازمة","ألف لازمة مفتوح ما قبلها","واو ساكنة","همزة"],correct:1,explanation:"الاسم المقصور ما ختم بألف لازمة مفتوح ما قبلها مثل: فتى، مصطفى."},
-{q:"الاسم المنقوص ينتهي بـ:",options:["ألف لازمة","ياء لازمة غير مشددة قبلها كسرة","همزة","تاء مربوطة"],correct:1,explanation:"الاسم المنقوص ما ختم بياء لازمة غير مشددة مكسور ما قبلها مثل: القاضي."},
-{q:"جمع 'مستشفى':",options:["مستشفيات","مستشفَون","مستشفِين","مُستشفٌ"],correct:0,explanation:"'مستشفى' اسم مقصور يُجمع جمع مؤنث سالم: مستشفيات."},
-{q:"'كلّما' أداة:",options:["شرط جازمة","شرط غير جازمة تفيد التكرار","نفي","استفهام"],correct:1,explanation:"'كلما' أداة شرط غير جازمة تفيد التكرار وتختص بالدخول على الماضي."},
-{q:"'سبحانَ اللهِ' إعراب 'سبحان':",options:["مفعول به","مفعول مطلق لفعل محذوف","مبتدأ","خبر"],correct:1,explanation:"'سبحان' مفعول مطلق لفعل محذوف تقديره 'أُسبِّح' وهو ملازم للإضافة."},
-{q:"'اللهمّ' أصلها:",options:["يا الله","الله أمّ","إله أمّة"],correct:0,explanation:"'اللهمّ' أصلها 'يا الله'، حُذفت 'يا' النداء وعُوّض عنها بالميم المشددة."},
-{q:"الحال يأتي دائماً:",options:["مرفوعاً","منصوباً","مجروراً","مجزوماً"],correct:1,explanation:"الحال وصف فضلة منصوب يبيّن هيئة صاحبه عند وقوع الفعل."},
-{q:"الجملة الاسمية تتكون من:",options:["فعل وفاعل","مبتدأ وخبر","فعل ونائب فاعل","حرف وفعل"],correct:1,explanation:"الجملة الاسمية تتكون من ركنين أساسيين: المبتدأ والخبر."},
-{q:"الفعل 'علِمَ' ينصب:",options:["مفعولاً واحداً","مفعولين","ثلاثة مفاعيل"],correct:1,explanation:"'علِمَ' من أفعال القلوب وينصب مفعولين أصلهما مبتدأ وخبر: علمتُ الحقَّ واضحاً."},
-{q:"المنادى المفرد العلم يُبنى على:",options:["الفتح","الضم","الكسر","السكون"],correct:1,explanation:"المنادى المفرد العلم يُبنى على ما يُرفع به في محل نصب مثل: يا محمدُ."},
-{q:"'أمّا' تفيد:",options:["الشرط والتفصيل","التأكيد","العطف","النفي"],correct:0,explanation:"'أمّا' حرف شرط وتفصيل وجوابها مقترن بالفاء."},
-{q:"التوكيد اللفظي يكون بـ:",options:["تكرار اللفظ نفسه","ألفاظ مخصوصة كنفس وعين","حروف التوكيد"],correct:0,explanation:"التوكيد اللفظي يكون بتكرار اللفظ السابق بعينه مثل: جاء جاء المعلمُ."},
-{q:"من ألفاظ التوكيد المعنوي:",options:["نفس وعين وكلا وكلتا وجميع","هو وهي وهم","قد ولقد","إنّ وأنّ"],correct:0,explanation:"التوكيد المعنوي يكون بألفاظ: نفس، عين، كلا، كلتا، كل، جميع، عامة."},
-{q:"البلاغة تنقسم إلى ثلاثة علوم هي:",options:["النحو والصرف والإملاء","المعاني والبيان والبديع","الصوتيات والدلالة والتركيب"],correct:1,explanation:"علم البلاغة ينقسم إلى: علم المعاني وعلم البيان وعلم البديع."},
-{q:"التشبيه الذي حُذف منه وجه الشبه والأداة يُسمى:",options:["تشبيه تام","تشبيه مفصل","تشبيه بليغ","تشبيه مرسل"],correct:2,explanation:"التشبيه البليغ ما حُذف منه وجه الشبه والأداة مثل: العلمُ نورٌ."},
-{q:"الاستعارة المكنية هي التي:",options:["حُذف فيها المشبه","حُذف فيها المشبه به وبقيت قرينة تدل عليه","ذُكر فيها الطرفان"],correct:1,explanation:"الاستعارة المكنية حُذف فيها المشبه به مع بقاء قرينة من لوازمه."},
-{q:"الجناس التام هو:",options:["اتفاق لفظين في بعض الحروف","اتفاق لفظين في نوع الحروف وعددها وترتيبها وحركاتها","تشابه في المعنى فقط"],correct:1,explanation:"الجناس التام ما اتفق فيه اللفظان في نوع الحروف وعددها وترتيبها وحركاتها."},
-{q:"الطباق هو:",options:["توافق الكلمات في الحرف الأخير","الجمع بين لفظين متضادين","تكرار اللفظ"],correct:1,explanation:"الطباق الجمع بين لفظين متضادين في المعنى مثل: يُحيي ويُميت."},
-{q:"السجع هو:",options:["توافق الفاصلتين في الحرف الأخير","الجمع بين المتضادات","حذف أحد ركني التشبيه"],correct:0,explanation:"السجع توافق الفاصلتين أو أكثر في الحرف الأخير وهو من المحسنات اللفظية."},
-{q:"الممنوع من الصرف يُجر بـ:",options:["الكسرة","الفتحة نيابة عن الكسرة","السكون","الضمة"],correct:1,explanation:"الممنوع من الصرف يُجر بالفتحة نيابة عن الكسرة ما لم يُضف أو تدخل عليه أل."},
-{q:"من أخوات 'كان':",options:["إنّ","ظنّ","أصبحَ","كأنّ"],correct:2,explanation:"'أصبح' من أخوات كان الناقصة التي ترفع المبتدأ وتنصب الخبر."},
-{q:"'لا طالبَ مهملٌ' نوع 'لا':",options:["نافية","ناهية","نافية للجنس","عاطفة"],correct:2,explanation:"'لا' هنا نافية للجنس تعمل عمل 'إنّ' فتنصب الاسم وترفع الخبر."},
-{q:"إعراب 'أخاك' في 'رأيتُ أخاك':",options:["مفعول به منصوب بالفتحة","مفعول به منصوب بالألف","فاعل مرفوع بالألف"],correct:1,explanation:"'أخاك' مفعول به منصوب بالألف لأنه من الأسماء الخمسة."},
-{q:"يُصاغ اسم التفضيل على وزن:",options:["فاعل","مفعول","أفعل","فعيل"],correct:2,explanation:"اسم التفضيل يُصاغ على وزن 'أفعل' مثل: أكبر، أعظم، أجمل."},
-{q:"التمييز الملحوظ (تمييز النسبة) مثل:",options:["اشتريتُ رطلاً تمراً","طابَ المكانُ هواءً","عندي عشرون كتاباً"],correct:1,explanation:"'هواءً' تمييز ملحوظ (نسبة) لأنه يُفهم من سياق الكلام."},
-{q:"المضاف إليه يكون دائماً:",options:["مرفوعاً","منصوباً","مجروراً","مبنياً"],correct:2,explanation:"المضاف إليه اسم مجرور دائماً وعلامة جره الكسرة أو ما ينوب عنها."},
-{q:"من أدوات النداء للبعيد:",options:["أيْ والهمزة","أيا وهيا","يا فقط"],correct:1,explanation:"'أيا' و'هيا' أدوات نداء تُستخدم لنداء البعيد."},
-{q:"الفعل الماضي مبني على:",options:["الضم دائماً","الفتح في الأصل","الكسر دائماً","السكون دائماً"],correct:1,explanation:"الفعل الماضي مبني على الفتح في الأصل وقد يُبنى على الضم أو السكون."},
-{q:"فعل الأمر مبني على:",options:["الفتح","الضم","السكون في الأصل","الكسر"],correct:2,explanation:"فعل الأمر مبني على السكون في الأصل وقد يُبنى على حذف حرف العلة أو حذف النون."},
-{q:"الفعل المضارع يكون معرباً إلا إذا اتصلت به:",options:["تاء الفاعل","نون التوكيد أو نون النسوة","واو الجماعة"],correct:1,explanation:"الفعل المضارع يُبنى على الفتح مع نون التوكيد وعلى السكون مع نون النسوة وفيما عدا ذلك يكون معرباً."},
-{q:"الأسماء الخمسة في حالة الرفع تُعرب بـ:",options:["الضمة","الألف","الواو","النون"],correct:2,explanation:"الأسماء الخمسة تُرفع بالواو وتُنصب بالألف وتُجر بالياء."},
-{q:"صيغ منتهى الجموع هي:",options:["كل جمع تكسير","ما كان على وزن مفاعل أو مفاعيل","جمع المذكر السالم"],correct:1,explanation:"صيغ منتهى الجموع: كل جمع تكسير بعد ألف تكسيره حرفان أو ثلاثة أوسطها ساكن مثل: مساجد ومفاتيح."},
-{q:"الألف اللينة في آخر الفعل الثلاثي تُكتب ياءً إذا:",options:["كان أصلها واواً","كان أصلها ياءً","جاءت بعد حرف ساكن"],correct:1,explanation:"تُكتب الألف ياءً إذا كان أصلها ياء مثل: رمى. وتُكتب ألفاً إذا كان أصلها واواً مثل: دعا."},
-{q:"ترتيب قوة الحركات للهمزة المتوسطة من الأقوى:",options:["الفتحة ثم الضمة ثم الكسرة","الكسرة ثم الضمة ثم الفتحة ثم السكون","الضمة ثم الفتحة ثم الكسرة"],correct:1,explanation:"الكسرة أقوى الحركات تناسبها الياء، ثم الضمة تناسبها الواو، ثم الفتحة يناسبها الألف، ثم السكون."},
-{q:"التاء المربوطة تُنطق عند الوقف:",options:["تاءً","هاءً","لا تُنطق","ألفاً"],correct:1,explanation:"التاء المربوطة تُنطق هاءً عند الوقوف عليها وتاءً عند الوصل."},
-{q:"الألف الفارقة تُكتب بعد:",options:["تاء التأنيث","واو الجماعة في الأفعال","ألف الاثنين"],correct:1,explanation:"الألف الفارقة تُكتب بعد واو الجماعة في الأفعال للتفريق بينها وبين الواو الأصلية."},
-{q:"المعلقات في الشعر الجاهلي عددها:",options:["خمس","سبع أو عشر","ثلاث","عشرون"],correct:1,explanation:"المعلقات قصائد طوال مختارة من الشعر الجاهلي اختُلف في عددها بين سبع وعشر."},
-{q:"صاحب معلقة 'قِفا نبكِ من ذكرى حبيبٍ ومنزلِ':",options:["عنترة بن شداد","طرفة بن العبد","امرؤ القيس"],correct:2,explanation:"معلقة 'قفا نبكِ' لامرئ القيس بن حُجر الكِندي وهو من أشهر شعراء الجاهلية."},
-{q:"الفرزدق وجرير عاشا في العصر:",options:["الجاهلي","الإسلامي","الأموي","العباسي"],correct:2,explanation:"الفرزدق وجرير من أبرز شعراء العصر الأموي واشتهرا بالنقائض بينهما."},
-{q:"'نهج البلاغة' يحتوي على خطب ورسائل منسوبة إلى:",options:["عمر بن الخطاب","الإمام علي بن أبي طالب","الحسن البصري"],correct:1,explanation:"'نهج البلاغة' مجموعة خطب ورسائل وحكم منسوبة للإمام علي بن أبي طالب جمعها الشريف الرضي."},
-{q:"أبو الطيب المتنبي عاش في العصر:",options:["الأموي","العباسي","الجاهلي","الحديث"],correct:1,explanation:"أبو الطيب المتنبي من أعظم شعراء العصر العباسي."},
-{q:"الخنساء اشتهرت بشعر:",options:["الغزل","المدح","الرثاء","الهجاء"],correct:2,explanation:"الخنساء اشتهرت برثاء أخيها صخر وهي من أشهر شاعرات العرب."},
-{q:"'كليلة ودمنة' ترجمها إلى العربية:",options:["الجاحظ","ابن المقفع","ابن خلدون"],correct:1,explanation:"عبد الله بن المقفع ترجم 'كليلة ودمنة' من الفارسية إلى العربية في العصر العباسي."},
-{q:"وزن 'استعمل':",options:["افتعل","تفاعل","استفعل","انفعل"],correct:2,explanation:"'استعمل' على وزن 'استفعل' مزيد بثلاثة أحرف."},
-{q:"المبتدأ حكمه الإعرابي:",options:["النصب","الجر","الرفع","الجزم"],correct:2,explanation:"المبتدأ مرفوع دائماً وهو ما يُبتدأ به الكلام ويُخبر عنه."},
-{q:"'إنّما العلمُ نورٌ' أداة 'إنّما' تفيد:",options:["التوكيد فقط","الحصر والقصر","الشرط"],correct:1,explanation:"'إنّما' أداة حصر وقصر كافّة ومكفوفة."},
-{q:"نائب الفاعل:",options:["اسم منصوب","اسم مرفوع يحل محل الفاعل بعد حذفه","اسم مجرور"],correct:1,explanation:"نائب الفاعل اسم مرفوع يحل محل الفاعل عند بناء الفعل للمجهول."},
-{q:"المثنى يُرفع بـ:",options:["الواو","الألف","الضمة","النون"],correct:1,explanation:"المثنى يُرفع بالألف ويُنصب ويُجر بالياء."},
-{q:"'أيّان' أداة استفهام عن:",options:["المكان","الزمان","الحال","العدد"],correct:1,explanation:"'أيّان' اسم استفهام يُسأل به عن الزمان المستقبل."},
-{q:"﴿فأينما تُولّوا فثمّ وجهُ الله﴾ 'ثَمّ' هنا:",options:["حرف عطف","ظرف مكان بمعنى هناك","حرف جر"],correct:1,explanation:"'ثَمّ' بفتح الثاء ظرف مكان بمعنى 'هناك' وتختلف عن 'ثُمّ' بضم الثاء حرف العطف."},
-{q:"'معلمون' جمع:",options:["تكسير","مذكر سالم","مؤنث سالم"],correct:1,explanation:"'معلمون' جمع مذكر سالم بزيادة واو ونون على المفرد 'معلم' مع سلامة بناء المفرد."},
-{q:"اسم الفاعل من غير الثلاثي يُصاغ على وزن:",options:["فاعل","مضارعه مع إبدال حرف المضارعة ميماً مضمومة وكسر ما قبل الآخر","مفعول"],correct:1,explanation:"اسم الفاعل من غير الثلاثي يُصاغ من مضارعه بإبدال حرف المضارعة ميماً مضمومة وكسر ما قبل الآخر."},
-{q:"'حبّذا' أسلوب:",options:["ذم","مدح","تعجب","استفهام"],correct:1,explanation:"'حبّذا' فعل ماضٍ جامد للمدح وذا اسم إشارة فاعل."},
-];
-const model3Questions = [
-{q:"'الذين' اسم موصول يُستخدم لـ:",options:["المثنى","جمع المذكر العاقل","جمع المؤنث","المفرد"],correct:1,explanation:"'الذين' اسم موصول لجمع المذكر العاقل."},
-{q:"'هذان' اسم إشارة لـ:",options:["المفرد المذكر","المثنى المذكر","المثنى المؤنث","الجمع"],correct:1,explanation:"'هذان' اسم إشارة للمثنى المذكر."},
-{q:"ضمير الغائبة المفردة هو:",options:["هو","أنتِ","هي","أنا"],correct:2,explanation:"'هي' ضمير الغائبة المفردة."},
-{q:"الاستثناء التام المنفي يجوز فيه:",options:["النصب فقط","الإتباع فقط","النصب والإتباع","الرفع"],correct:2,explanation:"في الاستثناء التام المنفي يجوز النصب على الاستثناء أو الإتباع على البدلية."},
-{q:"الفعل 'رأى' البصرية ينصب:",options:["مفعولاً واحداً","مفعولين","ثلاثة مفاعيل"],correct:0,explanation:"'رأى' البصرية بمعنى أبصر تنصب مفعولاً واحداً."},
-{q:"الفعل 'رأى' القلبية بمعنى 'علِم' ينصب:",options:["مفعولاً واحداً","مفعولين","ثلاثة"],correct:1,explanation:"'رأى' القلبية تنصب مفعولين أصلهما مبتدأ وخبر."},
-{q:"إذا ثُنّي الاسم الممدود تبقى همزته إذا كانت:",options:["أصلية","للتأنيث","منقلبة عن واو"],correct:0,explanation:"إذا كانت الهمزة أصلية تبقى عند التثنية مثل: قرّاء → قرّاءان."},
-{q:"وزن 'مُنطلِق':",options:["مُفتعِل","مُنفعِل","مُستفعِل","مُتفاعِل"],correct:1,explanation:"'منطلق' على وزن 'مُنفعِل' من الفعل 'انطلق' على وزن 'انفعل'."},
-{q:"اسم المكان من الفعل الثلاثي 'جلس':",options:["مجالس","مَجلِس","جليس","جالس"],correct:1,explanation:"اسم المكان من 'جلس' هو 'مَجلِس' على وزن مَفعِل."},
-{q:"اسم الآلة القياسي يكون على أوزان:",options:["مِفعَل ومِفعال ومِفعَلة","فاعل وفعّال","أفعل وفُعلى"],correct:0,explanation:"أوزان اسم الآلة القياسية: مِفعَل (مِبرد) ومِفعال (مِفتاح) ومِفعَلة (مِكنسة)."},
-{q:"'نِعمَ الخلقُ الصدقُ' إعراب 'الصدقُ':",options:["فاعل","خبر لمبتدأ محذوف وهو المخصوص بالمدح","مبتدأ","بدل"],correct:1,explanation:"'الصدقُ' مخصوص بالمدح خبر لمبتدأ محذوف تقديره 'هو'."},
-{q:"أسلوب الإغراء هو:",options:["تنبيه على أمر مكروه","ذكر المحبوب للمخاطب ليفعله","طلب الفعل بصيغة الأمر"],correct:1,explanation:"الإغراء ذكر المحبوب أو الممدوح للمخاطب ليلزمه مثل: الصدقَ الصدقَ."},
-{q:"أسلوب التحذير هو:",options:["تنبيه المخاطب على أمر مكروه ليتجنبه","ذكر المحبوب","أمر بالفعل"],correct:0,explanation:"التحذير تنبيه المخاطب إلى أمر مكروه ليحذره مثل: إيّاك والكذبَ."},
-{q:"'أيُّها الطلابُ اجتهدوا' إعراب 'أيُّ':",options:["مفعول به","فاعل","منادى مبني على الضم","مبتدأ"],correct:2,explanation:"'أيُّ' منادى مبني على الضم في محل نصب لأنه نكرة مقصودة."},
-{q:"البدل المطابق مثل:",options:["أكلتُ الرغيفَ نصفَه","أعجبني الطالبُ خلقُه","جاء الخليفةُ عمرُ"],correct:2,explanation:"'عمرُ' بدل مطابق (كل من كل) من 'الخليفةُ'."},
-{q:"عطف البيان هو:",options:["تابع جامد يشبه الصفة في توضيح متبوعه","تابع مشتق","حرف عطف"],correct:0,explanation:"عطف البيان تابع جامد يوضّح متبوعه ويبيّنه كالصفة."},
-{q:"الأفعال الخمسة هي كل فعل مضارع اتصل به:",options:["تاء التأنيث","ألف الاثنين أو واو الجماعة أو ياء المخاطبة","نون التوكيد أو نون النسوة"],correct:1,explanation:"الأفعال الخمسة: كل مضارع اتصلت به ألف الاثنين أو واو الجماعة أو ياء المخاطبة."},
-{q:"فعل الأمر من 'وقف':",options:["وقِفْ","أوقِفْ","قِفْ","وقَفَ"],correct:2,explanation:"فعل الأمر من 'وقف' هو 'قِفْ' بحذف حرف الفاء (فاء الفعل) لأنه واوي."},
-{q:"مصدر الفعل 'ساعَدَ':",options:["سَعْد","مُساعَدة","تساعُد","ساعد"],correct:1,explanation:"'ساعد' على وزن 'فاعَلَ' ومصدره 'مُفاعَلة' = مُساعَدة."},
-{q:"مصدر الفعل 'تعلَّمَ':",options:["عِلم","تعليم","تعلُّم","عالِم"],correct:2,explanation:"'تعلَّم' على وزن 'تفعَّل' ومصدره 'تفعُّل' = تعلُّم."},
-{q:"اسم الفاعل من 'استخرجَ':",options:["خارج","مُخرِج","مُستخرِج","استخراج"],correct:2,explanation:"اسم الفاعل من غير الثلاثي بإبدال حرف المضارعة ميماً مضمومة وكسر ما قبل الآخر: مُستخرِج."},
-{q:"اسم المفعول من 'استخرجَ':",options:["مَخروج","مُخرَج","مُستخرَج","خارج"],correct:2,explanation:"اسم المفعول من غير الثلاثي بإبدال حرف المضارعة ميماً مضمومة وفتح ما قبل الآخر: مُستخرَج."},
-{q:"الصفة المشبهة تدل على:",options:["حدوث الصفة","ثبوت الصفة في صاحبها","المبالغة","التفضيل"],correct:1,explanation:"الصفة المشبهة تدل على ثبوت الصفة في صاحبها مثل: كريم، شجاع."},
-{q:"من أوزان صيغ المبالغة:",options:["فاعل ومفعول","أفعل وفُعلى","فَعّال وفَعول وفَعيل","مُفعِل ومُفعَل"],correct:2,explanation:"صيغ المبالغة: فَعّال (صبّار) وفَعول (صبور) وفَعيل (رحيم) ومِفعال وفَعِل."},
-{q:"'قَدْ' مع الفعل الماضي تفيد:",options:["التقليل","التكثير","التحقيق","النفي"],correct:2,explanation:"'قد' مع الماضي تفيد التحقيق مثل: قد نجح الطالب."},
-{q:"'قَدْ' مع الفعل المضارع تفيد:",options:["التحقيق","التقليل أو التكثير","النفي","الجزم"],correct:1,explanation:"'قد' مع المضارع تفيد التقليل (الغالب) أو التكثير حسب السياق."},
-{q:"'رُبَّ' حرف جر:",options:["أصلي","شبيه بالزائد","زائد"],correct:1,explanation:"'ربّ' حرف جر شبيه بالزائد يفيد التقليل أو التكثير."},
-{q:"'خلا' و'عدا' و'حاشا' من أدوات:",options:["الشرط","العطف","الاستثناء","النفي"],correct:2,explanation:"'خلا' و'عدا' و'حاشا' أدوات استثناء يجوز فيها الجر والنصب."},
-{q:"المصدر المؤول يتكون من:",options:["اسم وفعل","أنْ والمضارع أو أنَّ واسمها وخبرها","حرف جر واسم"],correct:1,explanation:"المصدر المؤول يتكون من أنْ والفعل المضارع أو أنَّ واسمها وخبرها."},
-{q:"الجمل بعد المعارف تكون:",options:["صفات","أحوالاً","أخباراً"],correct:1,explanation:"الجمل بعد المعارف تُعرب أحوالاً مثل: جاء الطالبُ يركضُ."},
-{q:"الجمل بعد النكرات تكون:",options:["أحوالاً","صفات","أخباراً"],correct:1,explanation:"الجمل بعد النكرات تُعرب صفات (نعوتاً) مثل: جاء طالبٌ يركضُ."},
-{q:"'كم' الاستفهامية تمييزها:",options:["مفرد منصوب","مفرد مجرور","جمع مجرور"],correct:0,explanation:"تمييز 'كم' الاستفهامية مفرد منصوب مثل: كم كتاباً قرأت؟"},
-{q:"'كم' الخبرية تمييزها:",options:["مفرد منصوب","مفرد أو جمع مجرور","مرفوع"],correct:1,explanation:"تمييز 'كم' الخبرية مفرد أو جمع مجرور مثل: كم كتابٍ قرأتُ."},
-{q:"المفعول معه هو:",options:["اسم مرفوع","اسم منصوب يقع بعد واو بمعنى مع","اسم مجرور بمع"],correct:1,explanation:"المفعول معه اسم منصوب يقع بعد واو بمعنى 'مع' مثل: سرتُ والنهرَ."},
-{q:"'ليس' فعل:",options:["مضارع ناقص","ماضٍ ناقص جامد","أمر"],correct:1,explanation:"'ليس' فعل ماضٍ ناقص جامد من أخوات كان."},
-{q:"'ما دام' من أخوات:",options:["إنّ","كان","ظنّ","كاد"],correct:1,explanation:"'ما دام' من أخوات كان الناقصة مسبوقة بـ'ما' المصدرية الظرفية."},
-{q:"أسلوب الشرط يتكون من:",options:["مبتدأ وخبر","فعل وفاعل","أداة شرط وفعل شرط وجواب شرط"],correct:2,explanation:"أسلوب الشرط يتكون من ثلاثة أركان: أداة الشرط وفعل الشرط وجواب الشرط."},
-{q:"'أنّى' أداة استفهام عن:",options:["الزمان","المكان أو الكيفية","العدد","السبب"],correct:1,explanation:"'أنّى' اسم استفهام يُسأل به عن المكان أو الكيفية."},
-{q:"المحسنات المعنوية من علم البديع تشمل:",options:["السجع والجناس","الطباق والمقابلة والتورية","التشبيه والاستعارة"],correct:1,explanation:"المحسنات المعنوية تشمل: الطباق والمقابلة والتورية وغيرها."},
-{q:"المحسنات اللفظية من علم البديع تشمل:",options:["الطباق والمقابلة","السجع والجناس وحُسن التقسيم","التشبيه والاستعارة"],correct:1,explanation:"المحسنات اللفظية تشمل: السجع والجناس وحسن التقسيم والاقتباس."},
-{q:"التورية هي:",options:["ذكر لفظ له معنيان: قريب غير مراد وبعيد هو المراد","الجمع بين المتضادين","تشابه اللفظين"],correct:0,explanation:"التورية إطلاق لفظ له معنيان: قريب ظاهر غير مراد وبعيد خفي هو المراد."},
-{q:"'زارني مَن أُحبّه' نوع 'مَن':",options:["شرطية","استفهامية","موصولة","زائدة"],correct:2,explanation:"'مَن' هنا موصولة بمعنى 'الذي': زارني الذي أحبه."},
-{q:"'مَن يجتهدْ ينجحْ' نوع 'مَن':",options:["موصولة","استفهامية","شرطية جازمة"],correct:2,explanation:"'مَن' هنا اسم شرط جازم جزمت فعل الشرط 'يجتهدْ' وجوابه 'ينجحْ'."},
-{q:"الأساليب الإنشائية غير الطلبية تشمل:",options:["الأمر والنهي","التعجب والقسم والمدح والذم","التمني والنداء"],correct:1,explanation:"الإنشاء غير الطلبي يشمل: التعجب والقسم والمدح والذم وصيغ العقود."},
-{q:"الأساليب الإنشائية الطلبية تشمل:",options:["التعجب والقسم","الأمر والنهي والاستفهام والتمني والنداء","المدح والذم"],correct:1,explanation:"الإنشاء الطلبي يشمل: الأمر والنهي والاستفهام والتمني والنداء."},
-{q:"'وا إسلاماه' أسلوب:",options:["نداء","استغاثة","ندبة","تعجب"],correct:2,explanation:"الندبة نداء المتفجَّع عليه بـ'وا' مثل: وا إسلاماه."},
-{q:"الاستفهام التقريري يُراد منه:",options:["السؤال الحقيقي","الإقرار والاعتراف","الإنكار"],correct:1,explanation:"الاستفهام التقريري يُراد منه حمل المخاطب على الإقرار والاعتراف بما يعرفه."},
-{q:"الفرق بين 'إذْ' و'إذا':",options:["لا فرق","'إذْ' للماضي و'إذا' للمستقبل","كلاهما للماضي"],correct:1,explanation:"'إذْ' ظرف لما مضى من الزمان و'إذا' ظرف لما يُستقبل من الزمان."},
-{q:"'بينما' ظرف:",options:["مكان","زمان","حال"],correct:1,explanation:"'بينما' ظرف زمان بمعنى 'في أثناء'."},
-{q:"المصدر الميمي من الثلاثي يكون على وزن:",options:["مَفعَل أو مَفعِل","إفعال","تَفعيل"],correct:0,explanation:"المصدر الميمي من الثلاثي على وزن مَفعَل أو مَفعِل مثل: مَوعِد ومَلعَب."},
-{q:"المصدر الصناعي يُصنع بإضافة:",options:["ألف ونون","ياء النسبة وتاء التأنيث","واو ونون"],correct:1,explanation:"المصدر الصناعي يُشتق بإضافة ياء النسبة وتاء التأنيث مثل: إنسان → إنسانيّة."},
-{q:"الاسم الجامد هو:",options:["ما أُخذ من الفعل","ما دلّ على معنى مجرد ولم يُؤخذ من غيره","ما دلّ على فاعل"],correct:1,explanation:"الاسم الجامد ما لم يُؤخذ من غيره مثل: شمس، قمر، رجل."},
-{q:"'كأنَّ' من أخوات إنَّ وتفيد:",options:["التمني","الترجّي","التشبيه","الاستدراك"],correct:2,explanation:"'كأنّ' حرف مشبّه بالفعل يفيد التشبيه مثل: كأنّ الشمسَ قرصٌ ذهبي."},
-{q:"'لكنَّ' من أخوات إنَّ وتفيد:",options:["التمني","الترجّي","التشبيه","الاستدراك"],correct:3,explanation:"'لكنّ' حرف مشبّه بالفعل يفيد الاستدراك."},
-{q:"الفعل 'كاد' من أفعال:",options:["كان وأخواتها","المقاربة","القلوب"],correct:1,explanation:"'كاد' من أفعال المقاربة التي تدل على قرب وقوع الخبر."},
-{q:"أفعال الشروع مثل:",options:["كان وأصبح","كاد وأوشك","شَرَعَ وأخذ وبدأ وجعل"],correct:2,explanation:"أفعال الشروع تدل على البدء بالخبر مثل: شرع وأخذ وبدأ وجعل وأنشأ وطفق."},
-{q:"الفعل المتعدي هو الذي:",options:["لا يحتاج مفعولاً به","يحتاج مفعولاً به واحداً أو أكثر","يكتفي بفاعله"],correct:1,explanation:"الفعل المتعدي يحتاج مفعولاً به لإتمام معنى الجملة مثل: قرأ الطالبُ الدرسَ."},
-{q:"'أعطى' فعل متعدٍّ إلى:",options:["مفعول واحد","مفعولين","ثلاثة مفاعيل"],correct:1,explanation:"'أعطى' فعل يتعدى إلى مفعولين مثل: أعطيتُ الفقيرَ مالاً."},
-{q:"'أعلمَ' و'أرى' فعلان يتعديان إلى:",options:["مفعول واحد","مفعولين","ثلاثة مفاعيل"],correct:2,explanation:"'أعلمَ' و'أرى' يتعديان إلى ثلاثة مفاعيل مثل: أعلمتُ زيداً الخبرَ صحيحاً."},
-{q:"'لا سيّما' تُستخدم لـ:",options:["النفي","التخصيص والتفضيل","الاستثناء التام","التعجب"],correct:1,explanation:"'لا سيّما' تركيب يُستخدم لتخصيص ما بعده وتفضيله على ما قبله مثل: أحبّ الفواكه ولا سيّما التفاح."},
-];
-const allModels = {1: model1Questions, 2: model2Questions, 3: model3Questions};
-const modelNames = {1: "النموذج الأول", 2: "النموذج الثاني", 3: "النموذج الثالث"};
-const letters = ['أ', 'ب', 'ج', 'د'];
-let currentModel = null;
-let questions = [];
-let currentQuestion = 0;
-let userAnswers = [];
-let timerInterval;
-let timeLeft = 3600;
-let examStarted = false;
-
-function selectModel(num) {
-    currentModel = num;
-    questions = allModels[num];
-    userAnswers = new Array(questions.length).fill(-1);
-    currentQuestion = 0;
-    timeLeft = 3600;
-    examStarted = false;
-    document.getElementById('modelSelection').style.display = 'none';
-    document.getElementById('startScreen').style.display = 'block';
-    document.getElementById('modelTitle').textContent = modelNames[num] + ' - الامتحان الوطني للغة العربية';
-}
-
-function goBack() {
-    document.getElementById('startScreen').style.display = 'none';
-    document.getElementById('examSection').style.display = 'none';
-    document.getElementById('resultsSection').style.display = 'none';
-    document.getElementById('modelSelection').style.display = 'block';
-    if (timerInterval) clearInterval(timerInterval);
-}
-
-function startExam() {
-    document.getElementById('startScreen').style.display = 'none';
-    document.getElementById('examSection').style.display = 'block';
-    examStarted = true;
-    renderQuestions();
-    showQuestion(0);
-    startTimer();
-}
-
-function renderQuestions() {
-    const container = document.getElementById('questionsContainer');
-    let html = '';
-    questions.forEach((q, i) => {
-        html += '<div class="question-card" id="qcard-' + i + '" style="display:none;">';
-        html += '<div class="question-header"><span class="question-number">' + (i + 1) + '</span>';
-        html += '<div class="question-text">' + q.q + '</div></div>';
-        html += '<ul class="options-list">';
-        q.options.forEach((opt, j) => {
-            html += '<li class="option-item">';
-            html += '<input type="radio" class="option-input" name="q' + i + '" id="q' + i + '_' + j + '" value="' + j + '" onchange="selectAnswer(' + i + ',' + j + ')">';
-            html += '<label class="option-label" for="q' + i + '_' + j + '" id="label-q' + i + '_' + j + '">';
-            html += '<span class="option-letter">' + letters[j] + '</span>';
-            html += '<span>' + opt + '</span></label></li>';
-        });
-        html += '</ul>';
-        html += '<div class="explanation-box" id="exp-' + i + '"><div class="exp-title">التوضيح:</div><div>' + q.explanation + '</div></div>';
-        html += '</div>';
-    });
-    container.innerHTML = html;
-    renderNavDots();
-}
-
-function renderNavDots() {
-    const dotsContainer = document.getElementById('navDots');
-    let html = '';
-    questions.forEach((_, i) => {
-        let cls = i === currentQuestion ? 'current' : (userAnswers[i] !== -1 ? 'answered' : '');
-        html += '<span class="nav-dot ' + cls + '" onclick="showQuestion(' + i + ')">' + (i + 1) + '</span>';
-    });
-    dotsContainer.innerHTML = html;
-}
-
-function showQuestion(index) {
-    document.getElementById('qcard-' + currentQuestion).style.display = 'none';
-    currentQuestion = index;
-    document.getElementById('qcard-' + currentQuestion).style.display = 'block';
-    document.getElementById('progressText').textContent = 'السؤال ' + (index + 1) + ' من ' + questions.length;
-    document.getElementById('progressBar').style.width = (((index + 1) / questions.length) * 100) + '%';
-    document.getElementById('prevBtn').disabled = index === 0;
-    document.getElementById('nextBtn').disabled = index === questions.length - 1;
-    renderNavDots();
-}
-
-function navigateQuestion(dir) {
-    const next = currentQuestion + dir;
-    if (next >= 0 && next < questions.length) showQuestion(next);
-}
-
-function selectAnswer(qIndex, optIndex) {
-    userAnswers[qIndex] = optIndex;
-    renderNavDots();
-}
-
-function startTimer() {
-    timerInterval = setInterval(function() {
-        timeLeft--;
-        const mins = Math.floor(timeLeft / 60).toString().padStart(2, '0');
-        const secs = (timeLeft % 60).toString().padStart(2, '0');
-        document.getElementById('timerDisplay').textContent = mins + ':' + secs;
-        if (timeLeft <= 300) document.getElementById('timerDisplay').style.color = 'var(--accent)';
-        if (timeLeft <= 0) { clearInterval(timerInterval); submitExam(); }
-    }, 1000);
-}
-
-function submitExam() {
-    const answered = userAnswers.filter(a => a !== -1).length;
-    const unanswered = questions.length - answered;
-    let msg = 'هل أنت متأكد من تسليم الامتحان؟';
-    if (unanswered > 0) msg += '\n\nتنبيه: لديك ' + unanswered + ' سؤال بدون إجابة.';
-    if (!confirm(msg)) return;
-    clearInterval(timerInterval);
-    let correctCount = 0, wrongCount = 0, skippedCount = 0;
-    const errors = [];
-    questions.forEach((q, i) => {
-        if (userAnswers[i] === -1) { skippedCount++; errors.push({index:i, userAnswer:-1, correctAnswer:q.correct}); }
-        else if (userAnswers[i] === q.correct) { correctCount++; }
-        else { wrongCount++; errors.push({index:i, userAnswer:userAnswers[i], correctAnswer:q.correct}); }
-    });
-    const percentage = Math.round((correctCount / questions.length) * 100);
-    let gradeClass, message;
-    if (percentage >= 85) { gradeClass = 'excellent'; message = 'ممتاز! أداء رائع'; }
-    else if (percentage >= 70) { gradeClass = 'good'; message = 'جيد جداً! استمر'; }
-    else if (percentage >= 50) { gradeClass = 'average'; message = 'جيد، تحتاج مراجعة بعض المواضيع'; }
-    else { gradeClass = 'poor'; message = 'تحتاج مزيداً من المذاكرة'; }
-    const timeTaken = 3600 - timeLeft;
-    const timeMins = Math.floor(timeTaken / 60);
-    const timeSecs = timeTaken % 60;
-    let r = '<div class="score-card">';
-    r += '<div class="model-badge">' + modelNames[currentModel] + '</div>';
-    r += '<div class="score-circle ' + gradeClass + '"><div class="score-number">' + percentage + '%</div><div class="score-label">' + correctCount + '/' + questions.length + '</div></div>';
-    r += '<div class="score-message">' + message + '</div>';
-    r += '<p>الوقت المستغرق: ' + timeMins + ' دقيقة و ' + timeSecs + ' ثانية</p>';
-    r += '<div class="score-details">';
-    r += '<div class="detail-item correct-detail"><div class="detail-num">' + correctCount + '</div><div class="detail-label">إجابة صحيحة</div></div>';
-    r += '<div class="detail-item wrong-detail"><div class="detail-num">' + wrongCount + '</div><div class="detail-label">إجابة خاطئة</div></div>';
-    r += '<div class="detail-item skip-detail"><div class="detail-num">' + skippedCount + '</div><div class="detail-label">بدون إجابة</div></div>';
-    r += '</div></div>';
-    if (errors.length > 0) {
-        r += '<div class="errors-section"><div class="errors-title">مراجعة الأخطاء (' + errors.length + ' سؤال)</div>';
-        errors.forEach(function(err) {
-            const q = questions[err.index];
-            const userAns = err.userAnswer === -1 ? 'لم تتم الإجابة' : q.options[err.userAnswer];
-            const correctAns = q.options[err.correctAnswer];
-            r += '<div class="error-card">';
-            r += '<div class="q-text">السؤال ' + (err.index + 1) + ': ' + q.q + '</div>';
-            r += '<div class="your-answer">إجابتك: ' + userAns + '</div>';
-            r += '<div class="correct-answer">الإجابة الصحيحة: ' + correctAns + '</div>';
-            r += '<div class="why-box"><strong>لماذا؟</strong> ' + q.explanation + '</div>';
-            r += '</div>';
-        });
-        r += '</div>';
-    }
-    r += '<div class="btn-container">';
-    r += '<button class="btn btn-primary" onclick="reviewAll()">مراجعة جميع الأسئلة</button>';
-    r += '<button class="btn btn-secondary" onclick="goBack()">اختيار نموذج آخر</button>';
-    r += '<button class="btn btn-danger" onclick="retryExam()">إعادة نفس النموذج</button>';
-    r += '</div>';
-    document.getElementById('examSection').style.display = 'none';
-    const resultsSection = document.getElementById('resultsSection');
-    resultsSection.innerHTML = r;
-    resultsSection.style.display = 'block';
-    window.scrollTo({top: 0, behavior: 'smooth'});
-}
-
-function retryExam() {
-    selectModel(currentModel);
-    startExam();
-}
-
-function reviewAll() {
-    document.getElementById('resultsSection').style.display = 'none';
-    document.getElementById('examSection').style.display = 'block';
-    document.querySelector('.progress-container').style.display = 'none';
-    document.querySelector('.finish-bar').style.display = 'none';
-    document.querySelector('#examSection > .btn-container').innerHTML = '<button class="btn btn-secondary" onclick="goBack()">اختيار نموذج آخر</button><button class="btn btn-danger" onclick="retryExam()">إعادة النموذج</button>';
-    questions.forEach(function(q, i) {
-        const card = document.getElementById('qcard-' + i);
-        card.style.display = 'block';
-        document.getElementById('label-q' + i + '_' + q.correct).classList.add('correct');
-        if (userAnswers[i] !== -1 && userAnswers[i] !== q.correct) {
-            document.getElementById('label-q' + i + '_' + userAnswers[i]).classList.add('wrong');
-            card.classList.add('answered-wrong');
-        } else if (userAnswers[i] === q.correct) {
-            card.classList.add('answered-correct');
-        } else {
-            card.classList.add('answered-wrong');
-        }
-        document.getElementById('exp-' + i).style.display = 'block';
-        card.querySelectorAll('input[type="radio"]').forEach(function(inp) { inp.disabled = true; });
-    });
-    window.scrollTo({top: 0, behavior: 'smooth'});
-}
-</script>
-</body>
-</html>
